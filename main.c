@@ -26,22 +26,15 @@
 
 /* <----------| DEFINITIONS |----------> */
 
-// Longest single putty message
-#define MAX_MESSAGE_LEN 100
-
-// Magic values for scans
+// Magic values
 #define CRASH_AVOIDANCE_OFFSET 10
 
 // Initialization values
 #define BAUD_RATE 115200
-#define INIT_SERVO 0b0001
-#define INIT_PING 0b0010
-#define INIT_IR 0b0100
 
 // TODO: use these for interrupts
 volatile char uart_data;
 volatile char flag;
-
 
 // Pulled from Lab 10's old main
 volatile int button_num; // Current value of LCD pushbuttons
@@ -51,28 +44,11 @@ uint16_t servo_leftBound;
 
 /* <----------| UART METHODS |----------> */
 
-// Loop through array of distance values and print table of scanned angles
-void printScanData(scanVector vectors[], uint8_t numVectors);
-
 // Execute a certain movement action on the cybot based on user input
 int executeBotCommand(oi_t* sensor, scanVector vectors[], char input);
 
 // Sets bot into manual mode and until user exits
 void engageManualMode(oi_t* sensor, scanVector vectors[]);
-
-/* <----------| MATH & HELPER METHODS |----------> */
-
-// Returns a 1 if given value is within +/- tolerance of target, 0 if not
-uint8_t isWithinTolerance(uint8_t value, uint8_t target, uint8_t tolerance);
-
-// Returns the mean (average) of all values up to index length-1 in array
-uint8_t mean(uint8_t values[], uint8_t length);
-
-// Shifts all items to the left, remove first item, and appends newValue to length-1 index
-void updateBuffer(uint8_t buffer[], uint8_t length, uint8_t newValue);
-
-// TODO: comment me!
-scanVector scanAngle (uint8_t angle);
 
 /* <----------| IMPLEMENTATIONS |----------> */
 
@@ -181,60 +157,6 @@ uint8_t main(void)
     }
 }
 
-scanVector scanAngle(uint8_t angle) {
-    scanVector returnedVector;
-
-    // Move servo to input angle and store in degrees
-    servo_move((float)angle);
-    returnedVector.angle = angle;
-
-    // Scan and store ultrasound in centimeters (capped at 250cm)
-    uint8_t pingDistanceRaw = (uint8_t)ping_read();
-    returnedVector.pingDistance = pingDistanceRaw > 250.0 ? (uint8_t)(250) : (uint8_t)(pingDistanceRaw);
-
-    // Scan and store converted IR data in centimeters
-    returnedVector.irDistance = adc_calculateIRDistance(adc_read());
-
-    return returnedVector;
-}
-
-void printScanData(scanVector vectors[], uint8_t numVectors) {
-    char output[MAX_MESSAGE_LEN];
-    uint8_t i = 0;
-
-    // Print table header
-    uart_sendStr("Angle(Degrees)\tSound_Dist(cm)\tIR_Dist(cm)\r\n");
-
-    // Loop through values and print angle and distance to putty in table format
-    for (i = 0; i < numVectors; i++) {
-        snprintf(output, MAX_MESSAGE_LEN, "%u\t%u\t%u\r\n", vectors[i].angle, vectors[i].pingDistance, vectors[i].irDistance);
-        uart_sendStr(output);
-    }
-
-    uart_sendStr("END\n");
-}
-
-uint8_t isWithinTolerance(uint8_t value, uint8_t target, uint8_t tolerance) {
-    return abs(value - target) < tolerance;
-}
-
-uint8_t mean(uint8_t values[], uint8_t length) {
-    uint8_t i = 0;
-    uint16_t total = 0;
-    for (i = 0; i < length; i++) {
-        total += values[i];
-    }
-    return total / length;
-}
-
-void updateBuffer(uint8_t buffer[], uint8_t length, uint8_t newValue) {
-    uint8_t i = 0;
-    for (i = 0; i < length - 1; i++) {
-        buffer[i] = buffer[i + 1];
-    }
-    buffer[length - 1] = newValue;
-}
-
 int executeBotCommand(oi_t* sensor, scanVector vectors[], char input) {
     oi_update(sensor);
 
@@ -244,7 +166,7 @@ int executeBotCommand(oi_t* sensor, scanVector vectors[], char input) {
         case 's': bot_drive(-BOT_MAX_SPEED); break;
         case 'a': bot_turn(BOT_TURN_SPEED); break;
         case 'd': bot_turn(-BOT_TURN_SPEED); break;
-        case 'm': scanField(SCAN_START, SCAN_END, SCAN_INCREMENT, vectors); printScanData(vectors, NUM_SCANS); break;
+        case 'm': scan_readField(SCAN_START, SCAN_END, SCAN_INCREMENT, vectors); scan_printVectorsvectors, NUM_SCANS); break;
         case ' ': bot_stopWheels(); break;
         case '3': bot_driveSquare(sensor); break;
         case '4': bot_driveObstacles(sensor, 200); break;
@@ -255,6 +177,9 @@ int executeBotCommand(oi_t* sensor, scanVector vectors[], char input) {
             return 0;
     }
 
+    // FIXME: code breaks when user sends back nonexistent command because server is expecting to receive back this character but executeBotCommand()
+    // early returns a 0 and no '\n' on the swtich() default. Can we queue commands by putting uart_sendChar() at top of function? Or should we send a string
+    // informing server that input was not recognized
     // Requests socket for new input
     uart_sendChar('\n');
 
@@ -282,6 +207,15 @@ void engageManualMode(oi_t* sensor, scanVector vectors[]) {
         }
 
         executeBotCommand(sensor, vectors, input);
+
+        if (input == 'm') {
+            scan_readField(0, 180, 2, vectors);
+            scan_printVectors(vectors, NUM_SCANS);
+            uart_sendChar('\n');
+        }
+        else {
+            executeBotCommand(sensor, input);
+        }
     }
 
     return;

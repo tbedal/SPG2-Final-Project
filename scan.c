@@ -12,14 +12,44 @@
 
 #include "scan.h"
 
+/* <----------| DEFINES  |----------> */
+
 #define BUFFER_SIZE 10
 #define MAX_OBJECTS 15
 #define NO_OBJECT_DISTANCE 50
 #define TOLERANCE 3
 #define M_PI 3.14159265358979323846
+#define MAX_MESSAGE_LEN 80 // TODO: should i be somewhere else?? print_scanData() is kind of in a weird limbo land
+
+/* <----------| FUNCTIONS |----------> */
+
+// Private helper method to return the mean (average) of all values up to index length-1 in array
+static uint8_t mean(uint8_t values[], uint8_t length);
+
+// Private helper method which returns a 1 if given value is within +/- tolerance of target, 0 if not
+static uint8_t isWithinTolerance(uint8_t value, uint8_t target, uint8_t tolerance);
+
+// Private helper method to shift all items to the left, remove first item, and append newValue to length-1 index
+static void updateBuffer(uint8_t buffer[], uint8_t length, uint8_t newValue);
 
 /* <----------| IMPLEMENTATIONS |----------> */
 
+scanVector scan_read(uint8_t angle) {
+    scanVector returnedVector;
+
+    // Move servo to input angle and store in degrees
+    servo_move((float)angle);
+    returnedVector.angle = angle;
+
+    // Scan and store ultrasound in centimeters (capped at 250cm)
+    uint8_t pingDistanceRaw = (uint8_t)ping_read();
+    returnedVector.pingDistance = pingDistanceRaw > 250.0 ? (uint8_t)(250) : (uint8_t)(pingDistanceRaw);
+
+    // Scan and store converted IR data in centimeters
+    returnedVector.irDistance = adc_calculateIRDistance(adc_read());
+
+    return returnedVector;
+}
 
 void scan_readField(uint8_t startAngle, uint8_t endAngle, uint8_t incrementAngle, scanVector vectors[]) {
     uint8_t index = 0;
@@ -60,7 +90,7 @@ void scan_filterNoise(scanVector vectors[], uint8_t numValues, uint8_t bufferSiz
 }
 
 // TODO: Make it not store PING data when it doesn't USE it
-uint8_t findSmallestObject(scanVector vectors[], uint8_t numValues) {
+uint8_t scan_findSmallestObject(scanVector vectors[], uint8_t numValues) {
     uint8_t index = 0;
 
     // Find objects from data and record their start and end angles into the corresponding arrays
@@ -108,4 +138,41 @@ uint8_t findSmallestObject(scanVector vectors[], uint8_t numValues) {
 
 uint8_t scan_calculateObjectWidth(uint8_t medianDistance, uint8_t startAngle, uint8_t endAngle) {
     return sqrt(((pow(medianDistance, 2)) * 2) * (1 - cos(((endAngle - startAngle) / 180.0) * M_PI)));
+}
+
+void scan_printVectors(scanVector vectors[], uint8_t numVectors) {
+    char output[MAX_MESSAGE_LEN];
+    uint8_t i = 0;
+
+    // Print table header
+    uart_sendStr("Angle(Degrees)\tSound_Dist(cm)\tIR_Dist(cm)\r\n");
+
+    // Loop through values and print angle and distance to putty in table format
+    for (i = 0; i < numVectors; i++) {
+        snprintf(output, MAX_MESSAGE_LEN, "%u\t%u\t%u\r\n", vectors[i].angle, vectors[i].pingDistance, vectors[i].irDistance);
+        uart_sendStr(output);
+    }
+
+    uart_sendStr("END\n");
+}
+
+static uint8_t mean(uint8_t values[], uint8_t length) {
+    uint8_t i = 0;
+    uint16_t total = 0;
+    for (i = 0; i < length; i++) {
+        total += values[i];
+    }
+    return total / length;
+}
+
+static uint8_t isWithinTolerance(uint8_t value, uint8_t target, uint8_t tolerance) {
+    return abs(value - target) < tolerance;
+}
+
+static void updateBuffer(uint8_t buffer[], uint8_t length, uint8_t newValue) {
+    uint8_t i = 0;
+    for (i = 0; i < length - 1; i++) {
+        buffer[i] = buffer[i + 1];
+    }
+    buffer[length - 1] = newValue;
 }

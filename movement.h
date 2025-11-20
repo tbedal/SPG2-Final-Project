@@ -19,8 +19,12 @@
 #define BOT_CRAWL_SPEED 50
 #define BOT_TURN_SPEED 50
 
+/* <----------| SENSOR DETECTION |----------> */
+
 // Returns 1 if robot has been bumped, 0 if not
 int bot_isBumped(oi_t *sensor);
+
+/* <----------| DRIVE COMMANDS |----------> */
 
 // Sets cybot wheels to drive forward at given velocity
 void bot_drive(int velocity);
@@ -45,5 +49,7 @@ void bot_turnDegrees(oi_t *sensor, int velocity, double degrees);
 
 // Stops the cybot
 void bot_stopWheels(void);
+
+/* <----------| INCLUDES |----------> */
 
 #endif /* MOVEMENT_H_ */
