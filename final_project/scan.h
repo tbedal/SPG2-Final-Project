@@ -24,6 +24,7 @@
 #define NUM_SCANS (((SCAN_END - SCAN_START) / SCAN_INCREMENT) + 1)
 
 #ifndef SCAN_H_
+#define SCAN_H_
 
 // Wrapper struct for angle and distance values vector measured by the ultrasonic and IR sensors
 typedef struct scanResultData {
