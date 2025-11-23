@@ -47,3 +47,6 @@ dvt/
 # Ignore TivaWare dependencies for personal computer use
 tm4c123gh6pm.cmd
 tm4c123gh6pm_startup_ccs.c
+
+# Ignore VSCode preferences
+.vscode/
