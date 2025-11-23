@@ -12,6 +12,7 @@
 #define MOVEMENT_H_
 
 #include <math.h>
+#include "scan.h"
 #include "open_interface.h"
 
 #define BOT_MAX_SPEED 500
@@ -50,6 +51,9 @@ void bot_turnDegrees(oi_t *sensor, int velocity, double degrees);
 // Stops the cybot
 void bot_stopWheels(void);
 
-/* <----------| INCLUDES |----------> */
+/* <----------| UART COMMANDS |----------> */
+
+// Execute a certain movement action on the cybot based on user input
+int bot_executeCommand(oi_t* sensor, scanVector vectors[], char input);
 
 #endif /* MOVEMENT_H_ */

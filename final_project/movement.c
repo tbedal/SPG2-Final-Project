@@ -143,3 +143,33 @@ void bot_turnDegrees(oi_t *sensor, int velocity, double degrees) {
 void bot_stopWheels(void) {
     oi_setWheels(0, 0);
 }
+
+int bot_executeCommand(oi_t* sensor, scanVector vectors[], char input) {
+    oi_update(sensor);
+
+    // Convert input character into command for bot to execute
+    switch (input) {
+        case 'w': bot_drive(BOT_MAX_SPEED); break;
+        case 's': bot_drive(-BOT_MAX_SPEED); break;
+        case 'a': bot_turn(BOT_TURN_SPEED); break;
+        case 'd': bot_turn(-BOT_TURN_SPEED); break;
+        case 'm': scan_readField(SCAN_START, SCAN_END, SCAN_INCREMENT, vectors); scan_printVectorsvectors, NUM_SCANS); break;
+        case ' ': bot_stopWheels(); break;
+        case '3': bot_driveSquare(sensor); break;
+        case '4': bot_driveObstacles(sensor, 200); break;
+        case 'q': bot_turnDegrees(sensor, BOT_TURN_SPEED, 5.0); break;
+        case 'e': bot_turnDegrees(sensor, BOT_TURN_SPEED, -5.0); break;
+        default:
+            // Command not recognized
+            return 0;
+    }
+
+    // FIXME: code breaks when user sends back nonexistent command because server is expecting to receive back this character but executeBotCommand()
+    // early returns a 0 and no '\n' on the swtich() default. Can we queue commands by putting uart_sendChar() at top of function? Or should we send a string
+    // informing server that input was not recognized
+    // Requests socket for new input
+    uart_sendChar('\n');
+
+    // Successful completion of function
+    return 1;
+}
