@@ -42,8 +42,9 @@ volatile int button_num; // Current value of LCD pushbuttons
 uint16_t servo_rightBound;
 uint16_t servo_leftBound;
 
-/* <----------| UART METHODS |----------> */
+/* <----------| PRIVATE METHODS |----------> */
 
+// TODO: should this be moved into uart.h or stay in main?
 // Sets bot into manual mode and until user exits
 void engageManualMode(oi_t* sensor, scanVector vectors[]);
 
@@ -67,8 +68,8 @@ uint8_t main(void)
     uart_init(BAUD_RATE);
     ping_init();
     servo_init();
-    servo_rightBound = 49295;
-    servo_leftBound = 21764;
+    servo_rightBound = CAL_BOT23_SERVO_R;
+    servo_leftBound = CAL_BOT23_SERVO_L;
 
 
     // Uncomment and run to find cybot servo callibration values:
@@ -173,7 +174,7 @@ void engageManualMode(oi_t* sensor, scanVector vectors[]) {
             break;
         }
 
-        executeBotCommand(sensor, vectors, input);
+        bot_executeCommand(sensor, vectors, input);
 
         if (input == 'm') {
             scan_readField(0, 180, 2, vectors);
@@ -181,7 +182,7 @@ void engageManualMode(oi_t* sensor, scanVector vectors[]) {
             uart_sendChar('\n');
         }
         else {
-            executeBotCommand(sensor, input);
+            bot_executeCommand(sensor, input);
         }
     }
 

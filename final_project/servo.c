@@ -95,7 +95,8 @@ void servo_callibrate() {
             callibrationValue = TIMER1_TBMATCHR_R;
         }
 
-        timer_waitMicros(BUTTON_DELAY_MICROS); // This feels like bad practice, but the efficiency loss here is minimal and it works as good as debouncing
+        // This feels like bad practice, but the efficiency loss here is minimal and it works as good as debouncing
+        timer_waitMicros(BUTTON_DELAY_MICROS);
     }
 
     // Update selected match value to LCD
