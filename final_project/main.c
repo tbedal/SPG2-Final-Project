@@ -77,7 +77,6 @@ uint8_t main(void)
 
     // Update putty once serial connection is successful
     uart_sendStr("Serial connection established.\r\n");
-    }
 }
 
 void engageManualMode(oi_t* sensor, scanVector vectors[]) {
