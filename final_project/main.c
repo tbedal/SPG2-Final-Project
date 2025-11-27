@@ -30,21 +30,19 @@
 
 // For use with UART interrupts
 // FIXME: why are these necessary to declare for compilation?
-volatile char uart_data;
-volatile char flag;
+volatile char uart_data, flag;
 
-uint16_t servo_rightBound;
-uint16_t servo_leftBound;
+// Servo callibration values
+uint16_t servo_rightBound, servo_leftBound;
 
-/* <----------| PRIVATE METHODS |----------> */
+/* <----------| FUNCTONS |----------> */
 
 // Sets bot into manual mode and until user exits
 void engageManualMode(oi_t* sensor, scan_t vectors[]);
 
 /* <----------| IMPLEMENTATIONS |----------> */
 
-uint8_t main(void)
-{
+uint8_t main(void) {
     // Declare variables
     oi_t *sensorData = oi_alloc();
     scan_t scanData[SCAN_TOTAL];
