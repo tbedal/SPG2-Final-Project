@@ -4,8 +4,8 @@
  * Contains helpful functions to navigate the CyBot around obstacles.
  * 
  * @date October 29, 2025
- * @author Thiago Bedal
- * @author Joseph Vesterby
+ * @authors Thiago Bedal, Joseph Vesterby
+ * @authors Griffin Cegielsi, Andrew Pham, Joseph Zeffiro
 **/
 
 #ifndef MOVEMENT_H_

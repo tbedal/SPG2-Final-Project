@@ -4,8 +4,8 @@
  * Contains functions to communicate with the CyBot via UART
  * 
  * @date October 29, 2025
- * @author Thiago Bedal
- * @author Joseph Vesterby
+ * @authors Thiago Bedal, Joseph Vesterby
+ * @authors Griffin Cegielsi, Andrew Pham, Joseph Zeffiro
 **/
 
 /* <----------| INCLUDES |----------> */

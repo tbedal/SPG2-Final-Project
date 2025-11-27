@@ -4,8 +4,8 @@
  * Contains functions to operate the PING)) ultrasonic sensory on the CyBot.
  * 
  * @date November 5, 2025
- * @author Thiago Bedal
- * @author Joseph Vesterby
+ * @authors Thiago Bedal, Joseph Vesterby
+ * @authors Griffin Cegielsi, Andrew Pham, Joseph Zeffiro
 **/
 
 #ifndef PING_H_

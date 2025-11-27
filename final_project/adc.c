@@ -4,8 +4,8 @@
  * Contains functions to help operate the ADC on the IR sensor of the Cybot
  * 
  * @date October 29, 2025
- * @author Thiago Bedal
- * @author Joseph Vesterby
+ * @authors Thiago Bedal, Joseph Vesterby
+ * @authors Griffin Cegielsi, Andrew Pham, Joseph Zeffiro
 **/
 
 /* <----------| INCLUDES |----------> */

@@ -4,8 +4,8 @@
  * Contains functions useful for scanning a field populated with objects
  * 
  * @date November 19, 2025
- * @author Thiago Bedal
- * @author Joseph Vesterby
+ * @authors Thiago Bedal, Joseph Vesterby
+ * @authors Griffin Cegielsi, Andrew Pham, Joseph Zeffiro
 **/
 
 /* <----------| INCLUDES |----------> */
