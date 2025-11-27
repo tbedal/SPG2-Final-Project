@@ -12,14 +12,13 @@
 
 #include "scan.h"
 
-/* <----------| DEFINES  |----------> */
+/* <----------| DEFINTIONS |----------> */
 
 #define BUFFER_SIZE 10
 #define MAX_OBJECTS 15
 #define NO_OBJECT_DISTANCE 50
 #define TOLERANCE 3
 #define M_PI 3.14159265358979323846
-#define MAX_MESSAGE_LEN 80 // TODO: should i be somewhere else?? print_scanData() is kind of in a weird limbo land
 
 /* <----------| FUNCTIONS |----------> */
 
@@ -34,8 +33,8 @@ static void updateBuffer(uint8_t buffer[], uint8_t length, uint8_t newValue);
 
 /* <----------| IMPLEMENTATIONS |----------> */
 
-scanVector scan_read(uint8_t angle) {
-    scanVector returnedVector;
+scan_t scan_read(uint8_t angle) {
+    scan_t returnedVector;
 
     // Move servo to input angle and store in degrees
     servo_move((float)angle);
@@ -51,7 +50,7 @@ scanVector scan_read(uint8_t angle) {
     return returnedVector;
 }
 
-void scan_readField(uint8_t startAngle, uint8_t endAngle, uint8_t incrementAngle, scanVector vectors[]) {
+void scan_readField(uint8_t startAngle, uint8_t endAngle, uint8_t incrementAngle, scan_t vectors[]) {
     uint8_t index = 0;
     uint8_t angle = startAngle;
 
@@ -65,7 +64,7 @@ void scan_readField(uint8_t startAngle, uint8_t endAngle, uint8_t incrementAngle
     }
 }
 
-void scan_filterNoise(scanVector vectors[], uint8_t numValues, uint8_t bufferSize) {
+void scan_filterNoise(scan_t vectors[], uint8_t numValues, uint8_t bufferSize) {
     // Initialize variables
     uint8_t buffer[BUFFER_SIZE];
     uint8_t i = 0;
@@ -90,7 +89,7 @@ void scan_filterNoise(scanVector vectors[], uint8_t numValues, uint8_t bufferSiz
 }
 
 // TODO: Make it not store PING data when it doesn't USE it
-uint8_t scan_findSmallestObject(scanVector vectors[], uint8_t numValues) {
+uint8_t scan_findSmallestObject(scan_t vectors[], uint8_t numValues) {
     uint8_t index = 0;
 
     // Find objects from data and record their start and end angles into the corresponding arrays
@@ -140,16 +139,16 @@ uint8_t scan_calculateObjectWidth(uint8_t medianDistance, uint8_t startAngle, ui
     return sqrt(((pow(medianDistance, 2)) * 2) * (1 - cos(((endAngle - startAngle) / 180.0) * M_PI)));
 }
 
-void scan_printVectors(scanVector vectors[], uint8_t numVectors) {
-    char output[MAX_MESSAGE_LEN];
+void scan_printVectors(scan_t vectors[], uint8_t numValues) {
+    char output[UART_MESSAGE_LEN];
     uint8_t i = 0;
 
     // Print table header
     uart_sendStr("Angle(Degrees)\tSound_Dist(cm)\tIR_Dist(cm)\r\n");
 
     // Loop through values and print angle and distance to putty in table format
-    for (i = 0; i < numVectors; i++) {
-        snprintf(output, MAX_MESSAGE_LEN, "%u\t%u\t%u\r\n", vectors[i].angle, vectors[i].pingDistance, vectors[i].irDistance);
+    for (i = 0; i < numValues; i++) {
+        snprintf(output, UART_MESSAGE_LEN, "%u\t%u\t%u\r\n", vectors[i].angle, vectors[i].pingDistance, vectors[i].irDistance);
         uart_sendStr(output);
     }
 

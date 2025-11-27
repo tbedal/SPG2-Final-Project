@@ -8,13 +8,6 @@
  * @author Joseph Vesterby
 **/
 
-/*
- * TODO:
- * [ ] Standardize header file templates
- * [ ] Figure out where `#ifndef` should be placed in header files
- * [ ] Convert function comments to the formatted @return stuff
- */
-
 /* <----------| INCLUDES |----------> */
 
 #include "adc.h"
@@ -36,6 +29,7 @@
 #define BAUD_RATE 115200
 
 // For use with UART interrupts
+// FIXME: why are these necessary to declare for compilation?
 volatile char uart_data;
 volatile char flag;
 
@@ -45,7 +39,7 @@ uint16_t servo_leftBound;
 /* <----------| PRIVATE METHODS |----------> */
 
 // Sets bot into manual mode and until user exits
-void engageManualMode(oi_t* sensor, scanVector vectors[]);
+void engageManualMode(oi_t* sensor, scan_t vectors[]);
 
 /* <----------| IMPLEMENTATIONS |----------> */
 
@@ -53,8 +47,8 @@ uint8_t main(void)
 {
     // Declare variables
     oi_t *sensorData = oi_alloc();
-    scanVector scanData[NUM_SCANS];
-    char puttyMessage[MAX_MESSAGE_LEN];
+    scan_t scanData[SCAN_TOTAL];
+    char puttyMessage[UART_MESSAGE_LEN];
     char userInput = 0;
 
     // Initialize variables
@@ -64,8 +58,8 @@ uint8_t main(void)
     uart_init(BAUD_RATE);
     ping_init();
     servo_init();
-    servo_rightBound = BOT23_SERVO_BOUND_R;
-    servo_leftBound = BOT23_SERVO_BOUND_R;
+    servo_rightBound = BOTCAL_B23_SERVO_BOUND_R;
+    servo_leftBound = BOTCAL_B23_SERVO_BOUND_L;
 
     // Uncomment and run to find cybot servo callibration values:
     /*volatile int button_num;
@@ -79,7 +73,7 @@ uint8_t main(void)
     uart_sendStr("Serial connection established.\r\n");
 }
 
-void engageManualMode(oi_t* sensor, scanVector vectors[]) {
+void engageManualMode(oi_t* sensor, scan_t vectors[]) {
     char input = 0;
     char output[MAX_MESSAGE_LEN];
 

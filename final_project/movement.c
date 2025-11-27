@@ -111,18 +111,11 @@ void bot_driveObstacles(oi_t *sensor, double distanceCM) {
     }
 }
 
-void bot_driveSquare(oi_t* sensor) {
-    int i = 0;
-    for (i = 0; i < 4; i++) {
-        bot_driveDistancePrecise(sensor, 200, 50);
-        bot_turnDegrees(sensor, BOT_TURN_SPEED, 90);
-    }
-}
-
 void bot_turn(int velocity) {
     oi_setWheels(velocity, -velocity);
 }
 
+// FIXME: negative velocity values are technically legal here
 void bot_turnDegrees(oi_t *sensor, int velocity, double degrees) {
     // Initialize variables
     oi_update(sensor);
@@ -144,7 +137,7 @@ void bot_stopWheels(void) {
     oi_setWheels(0, 0);
 }
 
-int bot_executeCommand(oi_t* sensor, scanVector vectors[], char input) {
+int bot_executeCommand(oi_t* sensor, scan_t vectors[], char input) {
     oi_update(sensor);
 
     // Convert input character into command for bot to execute
@@ -155,7 +148,6 @@ int bot_executeCommand(oi_t* sensor, scanVector vectors[], char input) {
         case 'd': bot_turn(-BOT_TURN_SPEED); break;
         case 'm': scan_readField(SCAN_START, SCAN_END, SCAN_INCREMENT, vectors); scan_printVectorsvectors, NUM_SCANS); break;
         case ' ': bot_stopWheels(); break;
-        case '3': bot_driveSquare(sensor); break;
         case '4': bot_driveObstacles(sensor, 200); break;
         case 'q': bot_turnDegrees(sensor, BOT_TURN_SPEED, 5.0); break;
         case 'e': bot_turnDegrees(sensor, BOT_TURN_SPEED, -5.0); break;

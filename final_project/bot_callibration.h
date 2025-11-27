@@ -13,7 +13,7 @@
 
 /* <----------| SERVO |----------> */
 
-#define CAL_BOT23_SERVO_R 49295
-#define CAL_BOT23_SERVO_L 21764
+#define BOTCAL_B23_SERVO_BOUND_R 49295
+#define BOTCAL_B23_SERVO_BOUND_L 21764
 
 #endif /* BOT_CALLIBRATION_H_ */

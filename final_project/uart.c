@@ -1,7 +1,7 @@
 /**
  * uart.c
  *
- * Contains functions to communicate with the CyBot via ADC
+ * Contains functions to communicate with the CyBot via UART
  * 
  * @date October 29, 2025
  * @author Thiago Bedal
@@ -11,12 +11,6 @@
 /* <----------| INCLUDES |----------> */
 
 #include "uart.h"
-
-/* <----------| DEFINITIONS |----------> */
-
-// TODO: do we need these here?
-extern volatile char uart_data;
-extern volatile char flag;
 
 /* <----------| IMPLEMENTATIONS |----------> */
 
@@ -57,6 +51,14 @@ void uart_sendChar(char data) {
     }
 }
 
+void uart_sendStr(const char *data) {
+    unsigned char cursor = 0;
+
+    while (data[cursor]) { // TODO: implement character limit
+        uart_sendChar(data[cursor++]);
+    }
+}
+
 char uart_getChar(void) {
     while (UART1_FR_R & 0b0001'0000) {
         // Wait
@@ -66,15 +68,6 @@ char uart_getChar(void) {
 
     return recievedChar;
 }
-
-void uart_sendStr(const char *data) {
-    unsigned char cursor = 0;
-
-    while (data[cursor]) {
-        uart_sendChar(data[cursor++]);
-    }
-}
-
 
 void uart_interruptInit() {
     // Enable interrupts for receiving bytes through UART1
@@ -100,6 +93,4 @@ void uart_interruptHandler() {
 
     // STEP 3: Clear the interrupt
     UART1_ICR_R |= 0b0001'0000;
-
-
 }

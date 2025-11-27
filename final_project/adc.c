@@ -14,8 +14,8 @@
 
 /* <----------| FUNCTIONS |----------> */
 
-// Private method to continuously poll busywait until ADC completes sampling conversions. Isn't that terrible practice? Yes. Do I care? No!
-static void adc_waitForSample(void);
+// Private helper method to continously poll ADC until sampling conversions are complete.
+static void waitForSample(void);
 
 /* <----------| IMPLEMENTATIONS |----------> */
 
@@ -121,7 +121,7 @@ uint8_t adc_calculateIRDistance(uint16_t millivolts) {
     return 10 + (closestIndex * 2);
 }
 
-static void adc_waitForSample(void) {
+static void waitForSample(void) {
     while (!(ADC0_RIS_R & 0b0000'0000'0000'0000'0000'0000'0000'1000)) {
         // Wait until ADC completes conversion
     }

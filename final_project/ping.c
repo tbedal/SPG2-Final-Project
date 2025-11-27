@@ -12,15 +12,17 @@
 
 #include "ping.h"
 
-/* <----------| DEFINES |----------> */
+/* <----------| DEFINITIONS |----------> */
 
 volatile uint32_t positiveEdgeTime; // When sensor gives out pulse
 volatile uint32_t negativeEdgeTime; // When sensor recieves pulse
 volatile uint8_t doneFlag = 0; // 1 after end of pulse
 volatile uint8_t firstFlag = 0; // Stores which pulse we're on so timer ISR updates proper time (ONLY FOR ISR)
 
-// ISR for caputring PING)) pulse uisng Timer 3B 
-static void ping_timerHandler(void);
+/* <----------| FUNCTIONS |----------> */
+
+// ISR for capturing PING)) pulse uisng Timer 3B 
+static void timerHandler(void);
 
 /* <----------| IMPLEMENTATIONS |----------> */
 
@@ -127,7 +129,7 @@ double ping_read(void) {
     return distanceCM;
 }
 
-static void ping_timerHandler(void) {
+static void timerHandler(void) {
     // TODO: comment me!
 
     if (!(TIMER3_MIS_R & 0b0'0100'0000'0000)) {
