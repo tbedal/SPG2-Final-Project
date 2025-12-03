@@ -57,7 +57,7 @@ void scan_readField(uint8_t startAngle, uint8_t endAngle, uint8_t incrementAngle
     // Iterate through each angle in array (Chopped For loop)
     while (angle <= endAngle) {
         // Poll sensor and add value to array
-        vectors[index] = scanAngle(angle);
+        vectors[index] = scan_read(angle);
 
         index += 1;
         angle += incrementAngle;
@@ -122,7 +122,7 @@ uint8_t scan_findSmallestObject(scan_t vectors[], uint8_t numValues) {
         currentStartAngle = objectStartAngles[index];
         currentEndAngle = objectEndAngles[index];
         currentDistance = vectors[(objectStartAngles[index] + objectEndAngles[index]) / (SCAN_INCREMENT * 2)].pingDistance; // divide by four because joe is better at math than me
-        currentWidth = calculateObjectWidth(currentDistance, currentStartAngle, currentEndAngle);
+        currentWidth = scan_calculateObjectWidth(currentDistance, currentStartAngle, currentEndAngle);
 
         // Determine if current object is the smallest object
         if (currentWidth < smallestWidth) {

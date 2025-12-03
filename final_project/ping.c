@@ -71,7 +71,7 @@ void ping_init(void) {
 
     IntMasterEnable();
     NVIC_EN1_R |= (0b1 << (36 - 32));
-    IntRegister(INT_TIMER3B, ping_timerHandler);
+    IntRegister(INT_TIMER3B, timerHandler);
 
     TIMER3_CTL_R |= 0b000'0001'0000'0000;
 }

@@ -15,7 +15,11 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <math.h>
 #include "uart.h"
+#include "adc.h"
+#include "ping.h"
+#include "servo.h"
 
 /* <----------| DEFINITIONS |----------> */
 

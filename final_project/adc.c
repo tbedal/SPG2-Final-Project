@@ -75,7 +75,7 @@ uint16_t adc_read(void) {
     ADC0_PSSI_R |= 0b0000'0000'0000'0000'0000'0000'0000'1000;
 
     // Wait until ADC completes sample conversion
-    adc_waitForSample();
+    waitForSample();
 
     // Return converted value as integer
     return ADC0_SSFIFO3_R & 0b0000'0000'0000'0000'0000'1111'1111'1111;

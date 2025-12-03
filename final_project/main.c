@@ -69,14 +69,16 @@ uint8_t main(void) {
 
     // Update putty once serial connection is successful
     uart_sendStr("Serial connection established.\r\n");
+
+    return 0;
 }
 
 void engageManualMode(oi_t* sensor, scan_t vectors[]) {
     char input = 0;
-    char output[MAX_MESSAGE_LEN];
+    char output[UART_MESSAGE_LEN];
 
     // Status update
-    snprintf(output, MAX_MESSAGE_LEN, "Toggled manual\r\n");
+    snprintf(output, UART_MESSAGE_LEN, "Toggled manual\r\n");
     uart_sendStr(output);
 
     // Continue requesting input from user until user toggles out of auto
@@ -85,7 +87,7 @@ void engageManualMode(oi_t* sensor, scan_t vectors[]) {
 
         if (input == 't') {
             oi_setWheels(0, 0);
-            snprintf(output, MAX_MESSAGE_LEN, "Toggled auto\r\n");
+            snprintf(output, UART_MESSAGE_LEN, "Toggled auto\r\n");
             uart_sendStr(output);
             break;
         }
@@ -94,11 +96,11 @@ void engageManualMode(oi_t* sensor, scan_t vectors[]) {
 
         if (input == 'm') {
             scan_readField(0, 180, 2, vectors);
-            scan_printVectors(vectors, NUM_SCANS);
+            scan_printVectors(vectors, SCAN_TOTAL);
             uart_sendChar('\n');
         }
         else {
-            bot_executeCommand(sensor, input);
+            bot_executeCommand(sensor, vectors, input);
         }
     }
 

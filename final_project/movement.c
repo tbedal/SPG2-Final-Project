@@ -146,13 +146,13 @@ int bot_executeCommand(oi_t* sensor, scan_t vectors[], char input) {
         case 's': bot_drive(-BOT_MAX_SPEED); break;
         case 'a': bot_turn(BOT_TURN_SPEED); break;
         case 'd': bot_turn(-BOT_TURN_SPEED); break;
-        case 'm': scan_readField(SCAN_START, SCAN_END, SCAN_INCREMENT, vectors); scan_printVectorsvectors, NUM_SCANS); break;
+        case 'm': scan_readField(SCAN_START, SCAN_END, SCAN_INCREMENT, vectors); scan_printVectors(vectors, SCAN_TOTAL); break;
         case ' ': bot_stopWheels(); break;
         case '4': bot_driveObstacles(sensor, 200); break;
         case 'q': bot_turnDegrees(sensor, BOT_TURN_SPEED, 5.0); break;
         case 'e': bot_turnDegrees(sensor, BOT_TURN_SPEED, -5.0); break;
         default:
-            uart_sendStr("Command not recognized\n")
+            uart_sendStr("Command not recognized\n");
             return 0;
     }
 
