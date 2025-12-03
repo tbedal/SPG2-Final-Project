@@ -5,7 +5,7 @@ Embedded C code for an autonomously-navigating resturaunt server bot with real-t
 ## Dependencies
 
 - iRobot Open Interface
-- TivaWare TM4C123H6PGM Architecture
+- TivaWare TM4C123GH6PM Architecture
 
 ## Build
 
