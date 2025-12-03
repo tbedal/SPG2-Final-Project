@@ -24,8 +24,6 @@ volatile int button_num;
 /* <----------| IMPLEMENTATIONS |----------> */
 
 void servo_init(void) {
-    // TOOD: comment me!
-
     /* <----------| INIT GPIO |----------> */
 
     // ENABLE CLOCK TO CORRESPONDING GPIO MODULES
@@ -71,7 +69,6 @@ void servo_init(void) {
     TIMER1_TBILR_R |=  0xE200;
 
     // LOAD MATCH VALUES
-    // FIXME: Servo keeps breaking its back because match value is wrong
     TIMER1_TBMATCHR_R &= ~0xFFFF;
     TIMER1_TBMATCHR_R |=  0xA1E6;
     TIMER1_TBPMR_R &= ~0xFF;
