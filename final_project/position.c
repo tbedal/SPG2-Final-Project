@@ -47,7 +47,6 @@ void updateCyBotPosition(gridPointFull* currentPositionFull, uint8_t traveledDis
     // Updating currentPosition
     (*currentPositionFull).position.x += round(traveledDistance * cos(((*currentPositionFull).degrees) * DEGREES_TO_RADIANS));
     (*currentPositionFull).position.y += round(traveledDistance * sin(((*currentPositionFull).degrees) * DEGREES_TO_RADIANS));
-
 }
 
 gridPoint findTableLocation(gridPointFull* currentPositionFull, uint8_t tableDistance, int16_t tableDegrees) {
@@ -59,7 +58,6 @@ gridPoint findTableLocation(gridPointFull* currentPositionFull, uint8_t tableDis
 
     return currentPositionStorage.position;
 }
-
 
 uint8_t isVisitedTable(gridPoint tablePositions[POS_MAX_TABLES], gridPoint tableLocation) {
     uint8_t isVisitedTable = 0;

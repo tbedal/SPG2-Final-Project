@@ -38,19 +38,44 @@ typedef struct gridPointFullData {
 
 /* <----------| FUNCTIONS |----------> */
 
-// TODO: Comment me!
+/** 
+ * DESCRIPTION
+ * 
+ * @param currentPositionFull TODO
+ * @param traveledDistance TODO
+ * @param traveledDegrees TODO
+**/
 void updateCyBotPosition(gridPointFull* currentPostionFull, uint8_t traveledDistance, int16_t traveledDegrees);
 
-// TODO: Comment me!
 // NOTE: Pretends the bot moved to where the table is to get the coordinates of the table
+/** 
+ * DESCRIPTION
+ * 
+ * @param currentPositionFull TODO
+ * @param tableDistance TODO
+ * @param tableDegrees TODO
+ * @returns TODO
+**/
 gridPoint findTableLocation(gridPointFull* currentPostionFull, uint8_t tableDistance, int16_t tableDegrees);
 
-// TODO: Comment me!
+/** 
+ * DESCRIPTION
+ * 
+ * @param tablePositions TODO
+ * @param tableLocation TODO
+ * @returns TODO 
+**/
 uint8_t isVisitedTable(gridPoint tablePositions[POS_MAX_TABLES], gridPoint tableLocation);
 
-// TODO: Comment me!
 // NOTE: Assumes that firstWall and secondWall had a FL and FR sensed border aka bot was perpendicular to the wall 
 //       AND Assumes that first Wall and secondWall are perpendicular
+/** 
+ * DESCRIPTION
+ * 
+ * @param firstWall TODO
+ * @param secondWall TODO
+ * @returns TODO
+**/
 gridPoint calculateWall(gridPointFull firstWall, gridPointFull secondWall);
 
 #endif /* POSITION_H_ */
