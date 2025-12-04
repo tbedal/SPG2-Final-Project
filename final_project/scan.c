@@ -25,11 +25,13 @@
 // Private helper method to return the mean (average) of all values up to index length-1 in array
 static uint8_t mean(uint8_t values[], uint8_t length);
 
-// Private helper method which returns a 1 if given value is within +/- tolerance of target, 0 if not
-static uint8_t isWithinTolerance(uint8_t value, uint8_t target, uint8_t tolerance);
-
 // Private helper method to shift all items to the left, remove first item, and append newValue to length-1 index
 static void updateBuffer(uint8_t buffer[], uint8_t length, uint8_t newValue);
+
+// Private helper method which returns a 1 if given value is within +/- tolerance of target, 0 if not
+static inline uint8_t isWithinTolerance(uint8_t value, uint8_t target, uint8_t tolerance) {
+    return abs(value - target) < tolerance;
+}
 
 /* <----------| IMPLEMENTATIONS |----------> */
 
@@ -118,7 +120,7 @@ uint8_t scan_findSmallestObject(scan_t vectors[], uint8_t numValues) {
     uint8_t currentWidth = 255, currentStartAngle = 255, currentEndAngle = 255;
     uint8_t smallestWidth = 255, smallestDegree = 255;
     for (index = 0; index < objectCount; index++) {
-        // Calculate width of object
+        // Calculate width of objecmeant
         currentStartAngle = objectStartAngles[index];
         currentEndAngle = objectEndAngles[index];
         currentDistance = vectors[(objectStartAngles[index] + objectEndAngles[index]) / (SCAN_INCREMENT * 2)].pingDistance; // divide by four because joe is better at math than me
@@ -162,10 +164,6 @@ static uint8_t mean(uint8_t values[], uint8_t length) {
         total += values[i];
     }
     return total / length;
-}
-
-static uint8_t isWithinTolerance(uint8_t value, uint8_t target, uint8_t tolerance) {
-    return abs(value - target) < tolerance;
 }
 
 static void updateBuffer(uint8_t buffer[], uint8_t length, uint8_t newValue) {
