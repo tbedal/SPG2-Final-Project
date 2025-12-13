@@ -27,8 +27,6 @@ static void timerHandler(void);
 /* <----------| IMPLEMENTATIONS |----------> */
 
 void ping_init(void) {
-    // TOOD: comment me!
-
     /* <----------| INIT GPIO |----------> */
 
     // ENABLE CLOCK TO CORRESPONDING GPIO MODULES

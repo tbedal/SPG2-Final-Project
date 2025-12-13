@@ -72,7 +72,6 @@ void scan_filterNoise(scan_t vectors[], uint8_t numValues);
 **/
 uint8_t scan_findSmallestObject(scan_t vectors[], uint8_t numValues);
 
-// Calcualte width of object based on sound vector values
 /**
  * Calculates width of object in centimeters based on angle-distance vectors.
  * 
@@ -82,9 +81,5 @@ uint8_t scan_findSmallestObject(scan_t vectors[], uint8_t numValues);
  * @returns Cartesian width of object (cm)
 **/
 uint8_t scan_calculateObjectWidth(uint8_t medianDistance, uint8_t startAngle, uint8_t endAngle);
-
-// TODO: comment me!
-// OBJECT SCAN
-void objectScan();
 
 #endif /* SCAN_H_ */

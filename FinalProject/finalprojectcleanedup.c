@@ -26,9 +26,9 @@
 
 oi_t *sensor_data;
 
-botx = 0.0f;
-boty = 0.0f;
-bottheta = 0.0f;
+static float botx = 0.0f;
+static float boty = 0.0f;
+static float bottheta = 0.0f;
 
 typedef struct smallObject {
     int angle;
@@ -39,13 +39,21 @@ typedef struct smallObject {
 
 /* <----------| FUNCTONS |----------> */
 
-// TODO: comment me!
-smallObject objectScan();
+/**
+ * Scans the field for objects and sends results to Python via UART
+**/
+void objectScan();
 
-// TODO: comment me!
+/**
+ * Sends position to python to generate minimap
+ * 
+ * @warning Function reads static variables botx, boty, bottheta
+**/
 void sendPosition();
 
-// TODO: comment me!
+/**
+ * Converts user input into executable commands
+**/
 void manualMode();
 
 /* <----------| IMPLEMENTATIONS |----------> */
@@ -60,49 +68,62 @@ int main(void) {
     ping_init();
     IntMasterEnable();
 
+    // Initialize OI sensors
     sensor_data = oi_alloc();
     oi_init(sensor_data);
 
+    // Declare UART variables
     char my_data;
     char command[20];
     int index = 0;
 
+    // Main loop
     while (1) {
         // Read command
         index = 0;
         my_data = uart_receive();
-
         while (my_data != '\n') {
             command[index++] = my_data;
             my_data = uart_receive();
         }
-
         command[index] = '\0';
 
-        // Handle commands
-
-        // m = manual drive mode
+        // Execute command
         if (command[0] == 'm') {
             manualMode();
         }
-
-        // h = scan
         else if (command[0] == 'h') {
             objectScan();
             char msg[80];
             sprintf(msg, "large object angle: %d distance: %.2f cm\n", 0, 0); // FIXME: dummy values
             uart_sendStr(msg);
         }
-
-        // x = play noise
         else if (command[0] == 'x') {
             playNoise();
         }
     }
 }
 
-// TODO: comment me!
-// SEND POSITION TO PYTHON FOR MINIMAP
+void objectScan() {
+    int angle = 0;
+    int index = 0;
+
+    scan_t vectors[91];
+    scan_readField(0, 180, 2, vectors);
+    scan_filterNoise(vectors, 91);
+
+    for (angle = 0; angle < 180; angle += 2) {
+        // Send scan result for plotting
+        char msg[40];
+        sprintf(msg, "%d %.2f %.2f\n", angle, vectors[index].irDistance / 100.0, vectors[index].pingDistance / 100.0);
+        uart_sendStr(msg);
+
+        index++;
+    }
+
+    uart_sendStr("END\n");
+}
+
 void sendPosition() {
     char message[64];
     float x_cm = botx / 10;
@@ -112,8 +133,6 @@ void sendPosition() {
     uart_sendStr(message);
 }
 
-// TODO: comment me!
-//  MANUAL MODE
 void manualMode() {
     char my_data;
     int flag = 0;
