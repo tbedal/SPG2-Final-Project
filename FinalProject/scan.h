@@ -83,4 +83,8 @@ uint8_t scan_findSmallestObject(scan_t vectors[], uint8_t numValues);
 **/
 uint8_t scan_calculateObjectWidth(uint8_t medianDistance, uint8_t startAngle, uint8_t endAngle);
 
+// TODO: comment me!
+// OBJECT SCAN
+void objectScan();
+
 #endif /* SCAN_H_ */

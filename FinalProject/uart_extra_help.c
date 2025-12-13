@@ -71,12 +71,15 @@ char uart_receive(void)
  
 }
 
-//void uart_sendStr(const char *data)
-//{
-    //TODO
-
-	
-//}
+// TODO: comment me!
+// UART STRING FUNCTION
+void uart_sendStr(const char *str) {
+    int i = 0;
+    while (str[i] != '\0') {
+        uart_sendChar(str[i]);
+        i++;
+    }
+}
 
 // _PART3
 

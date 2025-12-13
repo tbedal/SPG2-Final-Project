@@ -27,6 +27,9 @@ void uart_init(void);
 
 void uart_sendChar(char data);
 
+// TODO: comment me!
+void uart_sendStr(const char *str);
+
 char uart_receive(void);
 
 //void uart_sendStr(const char *data);

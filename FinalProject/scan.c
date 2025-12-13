@@ -160,3 +160,25 @@ static void updateBuffer(uint8_t buffer[], uint8_t length, uint8_t newValue) {
     }
     buffer[length - 1] = newValue;
 }
+
+// TODO: comment me!
+// OBJECT SCAN
+void objectScan() {
+    int angle = 0;
+    int index = 0;
+
+    scan_t vectors[91];
+    scan_readField(0, 180, 2, vectors);
+    scan_filterNoise(vectors, 91);
+
+    for (angle = 0; angle < 180; angle += 2) {
+        // Send scan result for plotting
+        char msg[40];
+        sprintf(msg, "%d %.2f %.2f\n", angle, vectors[index].irDistance / 100.0, vectors[index].pingDistance / 100.0);
+        uart_sendStr(msg);
+
+        index++;
+    }
+
+    uart_sendStr("END\n");
+}
