@@ -15,7 +15,6 @@
 #include <stdbool.h>
 #include "driverlib/interrupt.h"
 
-
 //initialize the push buttons
 void button_init();
 
@@ -28,6 +27,5 @@ void gpioe_handler();
 ///Non-blocking call
 ///Returns highest value button being pressed, 0 if no button pressed
 uint8_t button_getButton();
-
 
 #endif /* BUTTON_H_ */

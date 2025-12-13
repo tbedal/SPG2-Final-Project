@@ -95,7 +95,7 @@ int main(void) {
         else if (command[0] == 'h') {
             objectScan();
             char msg[80];
-            sprintf(msg, "large object angle: %d distance: %.2f cm\n", 0, 0); // FIXME: dummy values
+            sprintf(msg, "large object angle: %d distance: %.2f cm\n", -1, -1); // UART usage here is deprecated; sends dummy values
             uart_sendStr(msg);
         }
         else if (command[0] == 'x') {

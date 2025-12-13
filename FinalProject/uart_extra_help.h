@@ -1,41 +1,69 @@
-/*
-*   uart.h
-*   Used to set up the UART [UART1 at 115200]
-*
- * Description: This is file is meant for those that would like a little
- *              extra help with formatting their code.
-*/
+/**
+ * uart_extra_help.c
+ *
+ * Contains functions to communicate with the CyBot via UART
+ * 
+ * @date October 29, 2025
+ * @authors Thiago Bedal, Joseph Vesterby
+ * @authors Griffin Cegielsi, Andrew Pham, Joseph Zeffiro
+**/
 
-#ifndef UART_H_
-#define UART_H_
+#ifndef UART_EXTRA_HELP_H_
+#define UART_EXTRA_HELP_H_
+
+/* <----------| INCLUDES |----------> */
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <inc/tm4c123gh6pm.h>
 #include "driverlib/interrupt.h"
 
+/* <----------| DEFINITIONS |----------> */
 
-// These two varbles have been declared
-// in the file containing main
 extern volatile  char uart_data;  // Your UART interupt code can place read data here
 extern volatile  char flag;       // Your UART interupt can update this flag
                                   // to indicate that it has placed new data
-                                  // in uart_data       
+                                  // in uart_data
 
+/* <----------| FUNCTIONS |----------> */
 
+/**
+ * Sets the registers necessary for communicating with the CyBot over UART.
+ * Uses UART1 with GPIO PMC0 on PB0 (output) and PMC1 on PB1 (input).
+ */
 void uart_init(void);
 
+/**
+ * Sends 8-bit character from CyBot to server over UART.
+ * 
+ * @warning Waits indefinitely for successful completion of task
+ * @param data desired ASCII char to be sent to server
+ */
 void uart_sendChar(char data);
 
-// TODO: comment me!
+/**
+ * Sends 80-character string from CyBot to server over UART.
+ * 
+ * @param data desired message to be sent to server
+**/
 void uart_sendStr(const char *str);
 
+/**
+ * Listens for data sent from the server.
+ * 
+ * @warning Waits indefinitely for successful completion of task
+ * @returns ASCII character sent from server
+**/
 char uart_receive(void);
 
-//void uart_sendStr(const char *data);
-
+/**
+ * Sets registers necessary for utilizing interrupts on UART; binds event trigger to ISR.
+**/
 void uart_interrupt_init();
 
+/**
+ * Update flag and data volatile variables upon interrupt trip.
+**/
 void uart_interrupt_handler();
 
-#endif /* UART_H_ */
+#endif /* UART_EXTRA_HELP_H_ */

@@ -106,7 +106,7 @@ uint8_t adc_calculateIRDistance(uint16_t millivolts) {
 
     int distBetween = (IR_DISTANCE_LOOKUP[closestIndex] - IR_DISTANCE_LOOKUP[closestIndex + 1]) / 2;
 
-    // TODO: According to Joe, this is technically not needed. But function works as of right now
+    // According to Joe, this is technically not needed. But function works as of right now
     // Forces the closestIndex down if it normally would've been too big
     if (IR_DISTANCE_LOOKUP[closestIndex] < millivolts) {
         closestIndex--;

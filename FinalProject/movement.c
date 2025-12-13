@@ -1,7 +1,19 @@
+/**
+ * movement.c
+ *
+ * Contains helpful functions to navigate the CyBot around obstacles.
+ * 
+ * @date October 29, 2025
+ * @authors Thiago Bedal, Joseph Vesterby
+ * @authors Griffin Cegielsi, Andrew Pham, Joseph Zeffiro
+**/
+
+/* <----------| INCLUDES |----------> */
+
 #include "movement.h"
 
-// TODO: comment me!
-//UPDATE POISITION
+/* <----------| IMPLEMENTATIONS |----------> */
+
 void updateodometry() {
     double d_mm = (double)sensor_data->distance; // mm
     double da_deg = (double)sensor_data->angle;  // degrees
@@ -21,59 +33,10 @@ void updateodometry() {
     boty += d_mm * sinf(theta_rad);
 }
 
-// Move forward (or backward if negative)
-double move_forward(oi_t* sensor, int centimeters) {
-    double sum = 0;
-    int speed = (centimeters < 0) ? -150 : 150;
-    double target = fabs(centimeters);
-
-    oi_setWheels(speed, speed);
-
-    while (fabs(sum) < target) {
-        oi_update(sensor);
-        sum += fabs(sensor->distance);
-
-        // Only stop early on bump if moving forward
-        if (speed > 0 && (sensor->bumpLeft || sensor->bumpRight)) {
-            oi_setWheels(0, 0);
-            return sum;
-        }
-    }
-
-    oi_setWheels(0, 0);
-    return sum;
-}
-
-// Clockwise turn
-void turn_clockwise(oi_t *sensor, double degrees) {
-    double sum = 0;
-    oi_setWheels(50, -50);
-    while (fabs(sum) < degrees) {
-        oi_update(sensor);
-        sum += sensor->angle; // Clockwise: angle is negative
-    }
-    oi_setWheels(0, 0);
-}
-
-// Counter-clockwise turn
-void turn_counter_clockwise(oi_t *sensor, double degrees) {
-    double sum = 0;
-    oi_setWheels(-50, 50);
-    while (fabs(sum) < degrees) {
-        oi_update(sensor);
-        sum -= sensor->angle; // Counter-clockwise: angle is positive
-    }
-    oi_setWheels(0, 0);
-}
-
-// TODO: comment me!
-// TURN BOT AT SPECIFIED SPEED
 void bot_turn(int velocity) {
     oi_setWheels(velocity, -velocity);
 }
 
-// TODO: comment me!
-// TURN BOT SPECIFICED DEGREES
 void bot_turnDegrees(oi_t *sensor_data, int velocity, double degrees) {
     oi_update(sensor_data);
     double degreesTurned = 0.0;
@@ -107,8 +70,6 @@ void bot_turnDegrees(oi_t *sensor_data, int velocity, double degrees) {
     oi_setWheels(0, 0);
 }
 
-// TODO: comment me!
-// DRIVE SPECIFICED DISTANCE AND UPDATE POISTION FOR MINIMAP
 double bot_driveDistance(oi_t *sensor_data, int velocity, double distanceCM) {
     oi_update(sensor_data);
 
@@ -140,14 +101,10 @@ double bot_driveDistance(oi_t *sensor_data, int velocity, double distanceCM) {
     return distanceTraveledMM / 10.0; // return cm
 }
 
-// TODO: comment me!
-//DRIVE BOT AT CHOSEN SPEED
 void bot_drive(int velocity) {
     oi_setWheels(velocity, velocity);
 }
 
-// TODO: comment me!
-// CHECK FOR BUMPING OBJECTS
 void objectCollision() {
     oi_update(sensor_data);
     if (sensor_data->bumpLeft || sensor_data->bumpRight) {
@@ -155,8 +112,6 @@ void objectCollision() {
     }
 }
 
-// TODO: comment me!
-//CHECK FOR BOUNDARY LINES
 void boundaryCheck() {
     oi_update(sensor_data);
     lcd_init();
@@ -170,8 +125,6 @@ void boundaryCheck() {
     }
 }
 
-// TODO: comment me!
-//CHECK FOR HOLES
 void holeCheck() {
     oi_update(sensor_data);
     lcd_init();
@@ -185,8 +138,6 @@ void holeCheck() {
     }
 }
 
-// TODO: comment me!
-// PLAY SOUND FOR FINDING TABLE
 void playNoise() {
    unsigned char notes[1] = {84};
    unsigned char duration[1] = {50};

@@ -85,11 +85,10 @@ void scan_filterNoise(scan_t vectors[], uint8_t numValues) {
     // Generate values for last bufferSize items. Theoretically unneccessary but I don't have the energy to FAAFO
     for (i = numValues - BUFFER_SIZE; i < numValues; i++) {
         vectors[i].pingDistance = mean(buffer, BUFFER_SIZE - j);
-        j++; // TODO: technically an unnecessary variable, but again, I want to slam my head into my desk rn and this works
+        j++; // Technically an unnecessary variable, but again, I want to slam my head into my desk rn and this works
     }
 }
 
-// TODO: Make it not store PING data when it doesn't USE it
 uint8_t scan_findSmallestObject(scan_t vectors[], uint8_t numValues) {
     uint8_t index = 0;
 
@@ -98,7 +97,7 @@ uint8_t scan_findSmallestObject(scan_t vectors[], uint8_t numValues) {
     uint8_t currentDistance = 0, nextDistance = 0;
     uint8_t objectCount = 0;
     uint8_t lookingAtObject = 0;
-    for (index = 0; index < numValues - 1; index++) { // TODO: i'm aware i can probably incremment by two since i'm always checking the next value but i do not care
+    for (index = 0; index < numValues - 1; index++) { // i'm aware i can probably incremment by two since i'm always checking the next value but i do not care
         currentDistance = vectors[index].irDistance;
         nextDistance = vectors[index + 1].irDistance;
 

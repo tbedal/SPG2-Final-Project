@@ -128,8 +128,6 @@ double ping_read(void) {
 }
 
 static void timerHandler(void) {
-    // TODO: comment me!
-
     if (!(TIMER3_MIS_R & 0b0'0100'0000'0000)) {
         TIMER3_ICR_R |= 0b1'0000'1111'0001'1111;
         return;
